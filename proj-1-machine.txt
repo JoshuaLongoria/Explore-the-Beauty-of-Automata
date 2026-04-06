@@ -1,10 +1,27 @@
-(
- (
-  (0, 1),
-  (q0, q1, q2),
-  q0,
-  (q2),
-  ((q0, 0, q0), (q0, 1, q0),(q0, 0, q1),(q1, 1, q2))
- ), 
- (1101, 0001, 1110)
-)
+# comment section 
+# lines with # are not read when debugging code 
+# plain.txt file was changed accordingly to fit current 
+# parse_file function and labled to define NFA 
+#
+
+
+
+# Alphabet
+0, 1
+# States 
+q0, q1, q2
+# Start State 
+q0
+# final states
+q2
+# Transistion States 
+q0, 0, q0
+q0, 1, q0
+q0, 0, q1
+q1, 1, q2
+# Expected output 
+---
+1101
+0001
+1110
+
