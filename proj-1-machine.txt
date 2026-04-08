@@ -19,9 +19,19 @@ q0, 0, q0
 q0, 1, q0
 q0, 0, q1
 q1, 1, q2
+
 # Expected output 
+# once the user inputs a string that is accepted by the NFA
+# it will be added to the list of strings below.
+# the inputs after the gap are tested and accepted values.
+#
 ---
 1101
 0001
 1110
 
+
+1101
+0101
+01010101
+01010101

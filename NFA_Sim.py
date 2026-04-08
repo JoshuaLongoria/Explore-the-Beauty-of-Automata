@@ -1,6 +1,16 @@
 
 # This code is a starting point for parsing an NFA definition from a file.
-
+# 
+# 
+# 
+# need to add input line that allows user to input values to test if they are in the 
+# accepted languages 
+# the max number of states allowed is 100 
+# the max number of alphabet allowed is 50 
+#
+#
+#
+#
 # The `tokenize` function breaks the file content into meaningful tokens.
 def tokenize(content):        # define this FIRST, this is
     tokens = []               #characters that are not whitespace or special characters are accumulated into a "current" token, which is added to the tokens list when a delimiter is encountered.  
@@ -155,6 +165,31 @@ def run_nfa_trace(nfa, word):
 
     return False, []
 
+# User I/O loop used to run through tracing logic and 
+# if valid we are appending it to the source .txt file and the stack display image on the output 
+# this will store all the accepted inputs in the .txt file and display image. 
+def process_user_input(nfa, filename):
+    user_string = input("Enter a string to test: ").strip()
+
+    accepted, trace_result = run_nfa_trace(nfa, user_string)
+
+    if accepted: 
+        print(f"String: '{user_string}' is accepted.")
+
+        # updates the dictionary's record of accepted strings
+        if 'accepted_list' not in nfa:
+            nfa['accepted_list'] = []
+        nfa['accepted_list'].append(user_string)
+
+        # saves accepted input value to .txt file
+        with open(filename, 'a') as f:
+            f.write(f"\n{user_string}")
+
+        print("File and stack updated.")
+    else: 
+        print(f"String: '{user_string}' is not valid for this NFA")
+
+
 
 # --- MAIN Execution Block ---
 if __name__ == "__main__":
@@ -185,4 +220,13 @@ if __name__ == "__main__":
         # rejected paths show "No Path Found"
         else:
             print(f"{s:<12} | REJECT       | No path found")
+
+    # calls the user i/o function and allows the user to input a string
+    # only runs once and will need to be re-ran to input a new string 
+    # still need to figure out how to implement multiple entries for user
+    
+    success = process_user_input(nfa, "proj-1-machine.txt")
+
+    if success: 
+        print("workflow complete.")
         
