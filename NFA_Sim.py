@@ -11,30 +11,6 @@
 #
 #
 #
-# The `tokenize` function breaks the file content into meaningful tokens.
-def tokenize(content):        # define this FIRST, this is
-    tokens = []               #characters that are not whitespace or special characters are accumulated into a "current" token, which is added to the tokens list when a delimiter is encountered.  
-    current = ""                # The function iterates through each character in the content, checking for whitespace and special characters. When it encounters a delimiter, it adds the current token to the list of tokens and resets the current token. Finally, it returns the list of tokens.    
-    
-    for char in content:
-        if char in (' ', '\n', '\t'):
-            if current:
-                tokens.append(current)
-                current = ""
-        elif char in ('(', ')', ','):
-            if current:
-                tokens.append(current)
-                current = ""
-            tokens.append(char)
-        else:
-            current += char
-    
-    if current:    #
-        tokens.append(current)
-    
-    return tokens
-
-# The `parse_file` function reads the file, tokenizes its content, and initializes the NFA structure and test strings.
 def parse_file(filename):     
     # try/expect error implented to ensure file actually exists 
     try: 
@@ -204,12 +180,6 @@ def process_user_input(nfa, filename):
 if __name__ == "__main__":
     # builds the NFA 
     nfa, test_strings = parse_file("proj-1-machine.txt")
-
-    #defines strings to test are read from file 
-    #Test the tokenizer separately
-    print("tokens worked!")
-    print("test strings:", test_strings)
-    print("nfa:", nfa) 
 
     # runs the test 
     print(f"\n{'String':<10} | {'Result':<10} | {'Traace Path'}")
