@@ -47,8 +47,7 @@ def parse_file(filename):
     except FileNotFoundError:
         print(f"Error: the File {filename} was not found.")
         return {}, []
-        
-        tokens = tokenize(content)   # ← calls tokenize from inside parse_file
+    
 
         # Mapping lines to the NFA components
         # We are using .split(',') to turn comma-separated strings into a python list 
@@ -167,29 +166,39 @@ def run_nfa_trace(nfa, word):
 
 # User I/O loop used to run through tracing logic and 
 # if valid we are appending it to the source .txt file and the stack display image on the output 
-# this will store all the accepted inputs in the .txt file and display image. 
+# this will store all the accepted inputs in the .txt file and display image.
+
+
+#(4/9) This function allows the user to input a string to test against the NFA.
+#If the string is accepted, it updates the NFA's record of accepted strings and appends the string to the source .txt file. 
+# The function continues to prompt the user for input until they enter an empty string, at which point it exits.
 def process_user_input(nfa, filename):
     user_string = input("Enter a string to test: ").strip()
 
-    accepted, trace_result = run_nfa_trace(nfa, user_string)
+    while True:  
+        if user_string =="":
+            print("Bye bye.")
+            break
 
-    if accepted: 
-        print(f"String: '{user_string}' is accepted.")
+        accepted, trace_result = run_nfa_trace(nfa, user_string)
 
-        # updates the dictionary's record of accepted strings
-        if 'accepted_list' not in nfa:
-            nfa['accepted_list'] = []
-        nfa['accepted_list'].append(user_string)
+        if accepted: 
+            print(f"String: '{user_string}' is accepted.")
 
-        # saves accepted input value to .txt file
-        with open(filename, 'a') as f:
-            f.write(f"\n{user_string}")
+            # updates the dictionary's record of accepted strings
+            if 'accepted_list' not in nfa:
+                nfa['accepted_list'] = []
+            nfa['accepted_list'].append(user_string)
 
-        print("File and stack updated.")
-    else: 
-        print(f"String: '{user_string}' is not valid for this NFA")
+            # saves accepted input value to .txt file
+            with open(filename, 'a') as f:
+                f.write(f"\n{user_string}")
 
+            print("File and stack updated.")
+        else: 
+            print(f"String: '{user_string}' is not valid for this NFA")
 
+        user_string = input("Please input another string: ").strip()
 
 # --- MAIN Execution Block ---
 if __name__ == "__main__":
