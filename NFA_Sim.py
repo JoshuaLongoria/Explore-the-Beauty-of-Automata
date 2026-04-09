@@ -149,6 +149,7 @@ def run_nfa_trace(nfa, word):
 #If the string is accepted, it updates the NFA's record of accepted strings and appends the string to the source .txt file. 
 # The function continues to prompt the user for input until they enter an empty string, at which point it exits.
 def process_user_input(nfa, filename):
+
     user_string = input("Enter a string to test: ").strip()
 
     while True:  
@@ -179,10 +180,11 @@ def process_user_input(nfa, filename):
 # --- MAIN Execution Block ---
 if __name__ == "__main__":
     # builds the NFA 
-    nfa, test_strings = parse_file("proj-1-machine.txt")
+    filename = input("Please input the file name: ")
+    nfa, test_strings = parse_file(filename)
 
     # runs the test 
-    print(f"\n{'String':<10} | {'Result':<10} | {'Traace Path'}")
+    print(f"\n{'String':<10} | {'Result':<10} | {'Trace Path'}")
     print("-" * 60)
 
     for s in test_strings: 
@@ -204,7 +206,7 @@ if __name__ == "__main__":
     # only runs once and will need to be re-ran to input a new string 
     # still need to figure out how to implement multiple entries for user
     
-    success = process_user_input(nfa, "proj-1-machine.txt")
+    success = process_user_input(nfa, filename)
 
     if success: 
         print("workflow complete.")
