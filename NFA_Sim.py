@@ -12,28 +12,30 @@
 #
 #
 # The `tokenize` function breaks the file content into meaningful tokens.
-def tokenize(content):        # define this FIRST, this is
-    tokens = []               #characters that are not whitespace or special characters are accumulated into a "current" token, which is added to the tokens list when a delimiter is encountered.  
-    current = ""                # The function iterates through each character in the content, checking for whitespace and special characters. When it encounters a delimiter, it adds the current token to the list of tokens and resets the current token. Finally, it returns the list of tokens.    
-    
-    for char in content:
-        if char in (' ', '\n', '\t'):
-            if current:
-                tokens.append(current)
-                current = ""
-        elif char in ('(', ')', ','):
-            if current:
-                tokens.append(current)
-                current = ""
-            tokens.append(char)
-        else:
-            current += char
-    
-    if current:    #
-        tokens.append(current)
-    
-    return tokens
 
+#-----------------------------------------------------------------------------------------------------------
+#def tokenize(content):        # define this FIRST, this is
+ #   tokens = []               #characters that are not whitespace or special characters are accumulated into a "current" token, which is added to the tokens list when a delimiter is encountered.  
+  #  current = ""                # The function iterates through each character in the content, checking for whitespace and special characters. When it encounters a delimiter, it adds the current token to the list of tokens and resets the current token. Finally, it returns the list of tokens.    
+    
+   # for char in content:
+    #    if char in (' ', '\n', '\t'):
+     #       if current:
+      #          tokens.append(current)
+       #         current = ""
+        #elif char in ('(', ')', ','):
+         #   if current:
+          #      tokens.append(current)
+           #     current = ""
+            #tokens.append(char)
+        #else:
+         #   current += char
+    
+    #if current:    #
+     #   tokens.append(current)
+    
+    #return tokens
+# -----------------------------------------------------------------------------------------------------------
 # The `parse_file` function reads the file, tokenizes its content, and initializes the NFA structure and test strings.
 def parse_file(filename):     
     # try/expect error implented to ensure file actually exists 
@@ -48,7 +50,7 @@ def parse_file(filename):
         print(f"Error: the File {filename} was not found.")
         return {}, []
         
-        tokens = tokenize(content)   # ← calls tokenize from inside parse_file
+###        # tokens = tokenize(content)   # ← calls tokenize from inside parse_file -------------------------
 
         # Mapping lines to the NFA components
         # We are using .split(',') to turn comma-separated strings into a python list 
@@ -169,64 +171,84 @@ def run_nfa_trace(nfa, word):
 # if valid we are appending it to the source .txt file and the stack display image on the output 
 # this will store all the accepted inputs in the .txt file and display image. 
 def process_user_input(nfa, filename):
+
     user_string = input("Enter a string to test: ").strip()
 
-    accepted, trace_result = run_nfa_trace(nfa, user_string)
+    while True: 
+        if user_string == "":
+            print("Bye bye.")
+            break 
 
-    if accepted: 
-        print(f"String: '{user_string}' is accepted.")
+        accepted, trace_result = run_nfa_trace(nfa, user_string)
 
-        # updates the dictionary's record of accepted strings
-        if 'accepted_list' not in nfa:
-            nfa['accepted_list'] = []
-        nfa['accepted_list'].append(user_string)
+        if accepted: 
+            print(f"String: '{user_string}' is accepted.")
 
-        # saves accepted input value to .txt file
-        with open(filename, 'a') as f:
-            f.write(f"\n{user_string}")
+            # updates the dictionary's record of accepted strings
+            if 'accepted_list' not in nfa:
+                nfa['accepted_list'] = []
+            nfa['accepted_list'].append(user_string)
 
-        print("File and stack updated.")
-    else: 
-        print(f"String: '{user_string}' is not valid for this NFA")
+                # saves accepted input value to .txt file
+            with open(filename, 'a') as f:
+                f.write(f"\n{user_string}")
+
+            print("File and stack updated.")
+
+            
+        else:
+            print(f"String: '{user_string}' is not valid for this NFA")
+        
+
+        user_string = input("Please input another string: ").strip()
 
 
 
 # --- MAIN Execution Block ---
 if __name__ == "__main__":
-    # builds the NFA 
-    nfa, test_strings = parse_file("proj-1-machine.txt")
 
-    #defines strings to test are read from file 
-    #Test the tokenizer separately
-    print("tokens worked!")
-    print("test strings:", test_strings)
-    print("nfa:", nfa) 
+        while True: 
+            try:
+                # builds the NFA
+                filename = input("Please input the file name: ")
+                nfa , test_strings = parse_file(filename)
+                
+            except FileNotFoundError:
+                if filename =="":
+                    print(f"Error: No file entered or does not exist!") 
+                    break
+        
 
-    # runs the test 
-    print(f"\n{'String':<10} | {'Result':<10} | {'Traace Path'}")
-    print("-" * 60)
+            #nfa, test_strings = parse_file(filename)
 
-    for s in test_strings: 
+            # runs the test 
+        print(f"\n{'String':<10} | {'Result':<10} | {'Trace Path'}")
+        print("-" * 60)
+
+        for s in test_strings: 
 
         # calls the Trace functions 
-        accepted, path = run_nfa_trace(nfa, s)
+            accepted, path = run_nfa_trace(nfa, s)
 
         # displays status of NFA (ACCEPTED/REJECTED)
-        if accepted: 
-            # provides visual trace element ['q0', 'q1'] into "q0 -> q1"
-            trace_display = " -> ".join(path)
-            print(f"{s:<12} | ACCEPT       | {trace_display}")
+            if accepted: 
+                # provides visual trace element ['q0', 'q1'] into "q0 -> q1"
+                trace_display = " -> ".join(path)
+                print(f"{s:<12} | ACCEPT       | {trace_display}")
 
-        # rejected paths show "No Path Found"
-        else:
-            print(f"{s:<12} | REJECT       | No path found")
+                # rejected paths show "No Path Found"
+            else:
+                print(f"{s:<12} | REJECT       | No path found")
 
-    # calls the user i/o function and allows the user to input a string
-    # only runs once and will need to be re-ran to input a new string 
-    # still need to figure out how to implement multiple entries for user
-    
-    success = process_user_input(nfa, "proj-1-machine.txt")
+                # calls the user i/o function and allows the user to input a string
+                # only runs once and will need to be re-ran to input a new string 
+                # still need to figure out how to implement multiple entries for user
+                
+        success = process_user_input(nfa, filename)
 
-    if success: 
-        print("workflow complete.")
+        if success: 
+            print("workflow complete.")
+
+                                
+            
         
