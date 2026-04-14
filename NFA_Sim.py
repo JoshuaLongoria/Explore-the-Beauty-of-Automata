@@ -11,7 +11,8 @@
 #
 #
 #
-def parse_file(filename):     
+def parse_file(filename):
+    # I need a file    
     # try/expect error implented to ensure file actually exists 
     try: 
         with open(filename, 'r') as f:
