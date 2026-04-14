@@ -24,6 +24,8 @@ def parse_file(filename):
     except FileNotFoundError:
         print(f"Error: the File {filename} was not found.")
         return {}, []
+        
+###        # tokens = tokenize(content)   # ← calls tokenize from inside parse_file -------------------------
     
 
         # Mapping lines to the NFA components
@@ -151,9 +153,15 @@ def run_nfa_trace(nfa, word):
 # The function continues to prompt the user for input until they enter an empty string, at which point it exits.
 def process_user_input(nfa, filename):
 
+
     user_string = input("Enter a string to test: ").strip()
 
-    while True:  
+    while True: 
+        if user_string == "":
+            print("Bye bye.")
+            break 
+
+        while True:  
         if user_string =="":
             print("Bye bye.")
             break
@@ -162,16 +170,33 @@ def process_user_input(nfa, filename):
 
         if accepted: 
             print(f"String: '{user_string}' is accepted.")
+        if accepted: 
+            print(f"String: '{user_string}' is accepted.")
 
             # updates the dictionary's record of accepted strings
             if 'accepted_list' not in nfa:
                 nfa['accepted_list'] = []
             nfa['accepted_list'].append(user_string)
+            # updates the dictionary's record of accepted strings
+            if 'accepted_list' not in nfa:
+                nfa['accepted_list'] = []
+            nfa['accepted_list'].append(user_string)
 
+                # saves accepted input value to .txt file
+            with open(filename, 'a') as f:
+                f.write(f"\n{user_string}")
             # saves accepted input value to .txt file
             with open(filename, 'a') as f:
                 f.write(f"\n{user_string}")
 
+            print("File and stack updated.")
+
+            
+        else:
+            print(f"String: '{user_string}' is not valid for this NFA")
+        
+
+        user_string = input("Please input another string: ").strip()
             print("File and stack updated.")
         else: 
             print(f"String: '{user_string}' is not valid for this NFA")
@@ -180,35 +205,60 @@ def process_user_input(nfa, filename):
 
 # --- MAIN Execution Block ---
 if __name__ == "__main__":
+
+        while True: 
+            try:
+                # builds the NFA
+                filename = input("Please input the file name: ")
+                nfa , test_strings = parse_file(filename)
+                
+            except FileNotFoundError:
+                if filename =="":
+                    print(f"Error: No file entered or does not exist!") 
+                    break
+        
+
+            #nfa, test_strings = parse_file(filename)
     # builds the NFA 
     filename = input("Please input the file name: ")
     nfa, test_strings = parse_file(filename)
 
+            # runs the test 
+        print(f"\n{'String':<10} | {'Result':<10} | {'Trace Path'}")
+        print("-" * 60)
     # runs the test 
     print(f"\n{'String':<10} | {'Result':<10} | {'Trace Path'}")
     print("-" * 60)
 
-    for s in test_strings: 
+        for s in test_strings: 
 
         # calls the Trace functions 
-        accepted, path = run_nfa_trace(nfa, s)
+            accepted, path = run_nfa_trace(nfa, s)
 
         # displays status of NFA (ACCEPTED/REJECTED)
-        if accepted: 
-            # provides visual trace element ['q0', 'q1'] into "q0 -> q1"
-            trace_display = " -> ".join(path)
-            print(f"{s:<12} | ACCEPT       | {trace_display}")
+            if accepted: 
+                # provides visual trace element ['q0', 'q1'] into "q0 -> q1"
+                trace_display = " -> ".join(path)
+                print(f"{s:<12} | ACCEPT       | {trace_display}")
 
-        # rejected paths show "No Path Found"
-        else:
-            print(f"{s:<12} | REJECT       | No path found")
+                # rejected paths show "No Path Found"
+            else:
+                print(f"{s:<12} | REJECT       | No path found")
 
+                # calls the user i/o function and allows the user to input a string
+                # only runs once and will need to be re-ran to input a new string 
+                # still need to figure out how to implement multiple entries for user
+                
+        success = process_user_input(nfa, filename)
     # calls the user i/o function and allows the user to input a string
     # only runs once and will need to be re-ran to input a new string 
     # still need to figure out how to implement multiple entries for user
     
     success = process_user_input(nfa, filename)
 
-    if success: 
-        print("workflow complete.")
+        if success: 
+            print("workflow complete.")
+
+                                
+            
         
