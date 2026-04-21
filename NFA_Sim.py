@@ -11,7 +11,8 @@
 #
 #
 #
-def parse_file(filename):     
+def parse_file(filename):
+    # I need a file    
     # try/expect error implented to ensure file actually exists 
     try: 
         with open(filename, 'r') as f:
@@ -23,6 +24,8 @@ def parse_file(filename):
     except FileNotFoundError:
         print(f"Error: the File {filename} was not found.")
         return {}, []
+        
+###        # tokens = tokenize(content)   # ← calls tokenize from inside parse_file -------------------------
     
 
         # Mapping lines to the NFA components
@@ -150,12 +153,13 @@ def run_nfa_trace(nfa, word):
 # The function continues to prompt the user for input until they enter an empty string, at which point it exits.
 def process_user_input(nfa, filename):
 
+
     user_string = input("Enter a string to test: ").strip()
 
-    while True:  
-        if user_string =="":
+    while True: 
+        if user_string == "":
             print("Bye bye.")
-            break
+            break 
 
         accepted, trace_result = run_nfa_trace(nfa, user_string)
 
@@ -174,10 +178,14 @@ def process_user_input(nfa, filename):
                 f.write(f"\n{user_string}")        # Opens --> Writes --> Closes immediately 
 
             print("File and stack updated.")
-        else: 
+
+            
+        else:
             print(f"String: '{user_string}' is not valid for this NFA")
+        
 
         user_string = input("Please input another string: ").strip()
+
 
 # --- MAIN Execution Block ---
 if __name__ == "__main__":
