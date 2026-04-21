@@ -167,9 +167,11 @@ def process_user_input(nfa, filename):
                 nfa['accepted_list'] = []
             nfa['accepted_list'].append(user_string)
 
+
+            # since we are only writing a few entries to the file this approach is fine. 
             # saves accepted input value to .txt file
-            with open(filename, 'a') as f:
-                f.write(f"\n{user_string}")
+            with open(filename, 'a') as f:         # This automatically closes the file the moment the code inside the indented block finishes. 
+                f.write(f"\n{user_string}")        # Opens --> Writes --> Closes immediately 
 
             print("File and stack updated.")
         else: 
@@ -179,35 +181,59 @@ def process_user_input(nfa, filename):
 
 # --- MAIN Execution Block ---
 if __name__ == "__main__":
-    # builds the NFA 
-    filename = input("Please input the file name: ")
-    nfa, test_strings = parse_file(filename)
-
-    # runs the test 
-    print(f"\n{'String':<10} | {'Result':<10} | {'Trace Path'}")
-    print("-" * 60)
-
-    for s in test_strings: 
-
-        # calls the Trace functions 
-        accepted, path = run_nfa_trace(nfa, s)
-
-        # displays status of NFA (ACCEPTED/REJECTED)
-        if accepted: 
-            # provides visual trace element ['q0', 'q1'] into "q0 -> q1"
-            trace_display = " -> ".join(path)
-            print(f"{s:<12} | ACCEPT       | {trace_display}")
-
-        # rejected paths show "No Path Found"
-        else:
-            print(f"{s:<12} | REJECT       | No path found")
-
-    # calls the user i/o function and allows the user to input a string
-    # only runs once and will need to be re-ran to input a new string 
-    # still need to figure out how to implement multiple entries for user
+    nfa = None  #established outside the loop to check for a valid file. 
     
-    success = process_user_input(nfa, filename)
-
-    if success: 
-        print("workflow complete.")
+    # builds the NFA 
+    while True:
+        filename = input("Please input the file name(or type 'exit' to quite): ").strip().lower()
         
+        if filename == "exit":
+            break
+        if not filename:
+            print("Error: No file name. Please try again.")
+            continue
+        if not filename.lower().endswith('.txt'):
+            print("Error: The file must have a '.txt' extension.")
+            continue
+        #once we reach this point, the filename is valid.
+        #Now when checking if the file exists, we can breake the loop if parse_file
+        #returns a valid NFA
+        nfa, test_strings = parse_file(filename)
+
+        if nfa:
+            break
+        else:
+            print("Please provide a valid, existing file path")
+
+    if filename == "exit":
+        print("Bye bye.")
+
+    else: 
+        # runs the test 
+        print(f"\n{'String':<10} | {'Result':<10} | {'Trace Path'}")
+        print("-" * 60)
+
+        for s in test_strings: 
+
+            # calls the Trace functions 
+            accepted, path = run_nfa_trace(nfa, s)
+
+            # displays status of NFA (ACCEPTED/REJECTED)
+            if accepted: 
+                # provides visual trace element ['q0', 'q1'] into "q0 -> q1"
+                trace_display = " -> ".join(path)
+                print(f"{s:<12} | ACCEPT       | {trace_display}")
+
+            # rejected paths show "No Path Found"
+            else:
+                print(f"{s:<12} | REJECT       | No path found")
+
+        # calls the user i/o function and allows the user to input a string
+        # only runs once and will need to be re-ran to input a new string 
+        # still need to figure out how to implement multiple entries for user
+        
+        success = process_user_input(nfa, filename)
+
+        if success: 
+            print("workflow complete.")
+    
