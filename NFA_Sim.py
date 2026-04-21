@@ -184,7 +184,6 @@ def process_user_input(nfa, filename):
             print(f"String: '{user_string}' is not valid for this NFA")
         
 
-        user_string = input("Please input another string: ").strip()
 
 
 # --- MAIN Execution Block ---
