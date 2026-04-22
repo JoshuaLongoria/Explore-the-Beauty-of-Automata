@@ -154,9 +154,10 @@ def run_nfa_trace(nfa, word):
 def process_user_input(nfa, filename):
 
 
-    user_string = input("Enter a string to test: ").strip()
+
 
     while True: 
+        user_string = input("Enter a string to test: ").strip()
         if user_string == "":
             print("Bye bye.")
             break 
@@ -192,7 +193,7 @@ if __name__ == "__main__":
     
     # builds the NFA 
     while True:
-        filename = input("Please input the file name(or type 'exit' to quite): ").strip().lower()
+        filename = input("Please input the file name(or type 'exit' to quit): ").strip().lower()
         
         if filename == "exit":
             break
